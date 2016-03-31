@@ -7,7 +7,7 @@ vagrant_local:
     hostname: default.dev
     aliases:
       - www.default.dev
-    ip: 33.33.33.2
+    ip: 192.168.123.2
     memory: '512'
     cpus: 1
     app_shared_folder:
