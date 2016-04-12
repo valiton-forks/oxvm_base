@@ -23,21 +23,23 @@ PHP_OPTIONS["opcache.enable"]="1"
 
 if [[ ${MAIN_VERSION} == "5.3" ]]; then
     XDEBUG_VERSION="2.7.7"
-    sudo mkdir /usr/include/freetype2/freetype
-    sudo ln -s /usr/include/freetype2/* /usr/include/freetype2/freetype/
+    if [[ ! -d /usr/include/freetype2/freetype ]]; then
+        sudo mkdir /usr/include/freetype2/freetype
+        sudo ln -s /usr/include/freetype2/* /usr/include/freetype2/freetype/
+    fi
 fi
 
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # Install additional dependencies
 sudo apt-get install -y autoconf automake build-essential ccache
-sudo apt-get install -y apache2-dev libmcrypt-dev libltdl-dev libssl-dev libgd-dev libbz2-dev libreadline-dev libcurl3-openssl-dev libxslt1-dev libicu-dev
+sudo apt-get install -y apache2-dev libmcrypt-dev libltdl-dev libssl-dev libgd-dev libbz2-dev libreadline-dev libcurl3-openssl-dev libxslt1-dev libicu-dev libmhash-dev
 sudo chmod -R oga+rw /usr/lib/apache2/modules
 sudo chmod -R oga+rw /etc/apache2
 sudo chmod -R oga+rw /var/lib/apache2/module/enabled_by_admin/
 
 # Install new PHP version
-OPTIONS="+default+apxs2+mysql+intl+iconv+soap"
+OPTIONS="+default+apxs2+mysql+intl+iconv+soap+mhash+gettext+exif+dba+ftp"
 if [[ ${MAIN_VERSION} == "7.0" ]]; then
     OPTIONS="${OPTIONS}+gd"
     XDEBUG_VERSION="latest"
