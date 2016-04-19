@@ -14,6 +14,10 @@
   Alias "{{ adminer.web_alias }}" "{{ adminer.document_root }}"
 {% endif %}
 
+{% if adminer_editor.install %}
+  Alias "{{ adminer_editor.web_alias }}" "{{ adminer_editor.document_root }}"
+{% endif %}
+
   <Directory {{ apache.docroot }}>
     AllowOverride All
     Options -Indexes +FollowSymLinks
@@ -22,6 +26,13 @@
 
 {% if adminer.install %}
   <Directory {{ adminer.document_root }}>
+    AllowOverride All
+    Options -Indexes +FollowSymLinks
+    Require all granted
+  </Directory>
+{% endif %}
+{% if adminer_editor.install %}
+  <Directory {{ adminer_editor.document_root }}>
     AllowOverride All
     Options -Indexes +FollowSymLinks
     Require all granted

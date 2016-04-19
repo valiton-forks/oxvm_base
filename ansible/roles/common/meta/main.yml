@@ -6,6 +6,7 @@ dependencies:
   - php
   - mailhog
   - adminer
+  - adminer_editor
   - xdebug
   - zendguard
   - composer

@@ -79,6 +79,10 @@ adminer:
   install: false
   pkg_url: 'https://www.adminer.org/static/download/4.2.4/adminer-4.2.4-mysql-en.php'
   web_alias: '/adminer/'
+adminer_editor:
+  install: false
+  pkg_url: 'https://www.adminer.org/static/download/4.2.4/editor-4.2.4-mysql-en.php'
+  web_alias: '/adminer_editor/'
 varnish:
   install: false
   repo:
