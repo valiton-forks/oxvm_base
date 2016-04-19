@@ -5,6 +5,7 @@ dependencies:
   - mysql
   - php
   - mailhog
+  - adminer
   - xdebug
   - zendguard
   - composer

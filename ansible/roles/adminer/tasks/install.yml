@@ -1,0 +1,21 @@
+---
+- name: Ensure document root is present
+  become: true
+  file:
+    path: "{{ adminer.document_root }}"
+    mode: 0755
+    state: directory
+
+- name: Download fixed adminer version
+  become: true
+  get_url:
+    url: "{{ adminer.pkg_url }}"
+    dest: "{{ adminer_internal.pkg_dest }}"
+    sha256sum: "{{ adminer.pkg_sha256 }}"
+    mode: 0755
+
+- name: Transfer main entry point of adminer
+  become: true
+  template:
+    src: index.php.adminer
+    dest: "{{ adminer_internal.pkg_entry_point }}"

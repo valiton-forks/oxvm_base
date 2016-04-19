@@ -1,0 +1,27 @@
+<?php
+function adminer_object() {
+  class AdminerSoftware extends Adminer {
+        function loginForm() {
+                ?>
+<table cellspacing="0">
+<tbody><tr><th>System</th><td><select name="auth[driver]" onchange="loginDriver(this);"><option value="server" selected="">MySQL</option>
+</select></td></tr><tr class=""><th>Server</th><td><input name="auth[server]" value="" title="hostname[:port]" placeholder="localhost" autocapitalize="off">
+</td></tr><tr class=""><th>Username</th><td><input name="auth[username]" id="username" value="{{ mysql.user }}" autocapitalize="off">
+</td></tr><tr class=""><th>Password</th><td><input type="password" name="auth[password]" value="{{ mysql.password }}">
+</td></tr><tr><th>Database</th><td><input name="auth[db]" value="{{ mysql.database }}" autocapitalize="off">
+</td></tr></tbody></table>
+<script type="text/javascript">
+var username = document.getElementById('username');
+focus(username);
+username.form['auth[driver]'].onchange();
+</script>
+<?php
+                echo "<p><input type='submit' value='" . lang('Login') . "'>\n";
+                echo checkbox("auth[permanent]", 1, $_COOKIE["adminer_permanent"], lang('Permanent login')) . "\n";
+        }
+  }
+
+    return new AdminerSoftware;
+}
+
+include "{{ adminer.pkg_name }}";

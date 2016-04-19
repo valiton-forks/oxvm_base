@@ -75,6 +75,10 @@ mailhog:
   pkg_url: 'https://github.com/mailhog/MailHog/releases/download/v0.1.8/MailHog_linux_amd64'
   sendmail_url: 'https://github.com/mailhog/mhsendmail/releases/download/v0.1.9/mhsendmail_linux_amd64'
   web_alias: '/mail/'
+adminer:
+  install: false
+  pkg_url: 'https://www.adminer.org/static/download/4.2.4/adminer-4.2.4-mysql-en.php'
+  web_alias: '/adminer/'
 varnish:
   install: false
   repo:

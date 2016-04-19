@@ -10,9 +10,21 @@
   ProxyPassReverse "{{ mailhog.web_alias }}" "http://localhost:{{ mailhog.web_port }}/"
   {% endif %}
 
+{% if adminer.install %}
+  Alias "{{ adminer.web_alias }}" "{{ adminer.document_root }}"
+{% endif %}
+
   <Directory {{ apache.docroot }}>
     AllowOverride All
     Options -Indexes +FollowSymLinks
     Require all granted
   </Directory>
+
+{% if adminer.install %}
+  <Directory {{ adminer.document_root }}>
+    AllowOverride All
+    Options -Indexes +FollowSymLinks
+    Require all granted
+  </Directory>
+{% endif %}
 </VirtualHost>

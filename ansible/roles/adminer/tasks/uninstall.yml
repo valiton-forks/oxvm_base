@@ -1,0 +1,10 @@
+---
+- name: Remove adminer PHP artefacts
+  become: true
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ adminer_internal.pkg_entry_point }}"
+    - "{{ adminer_internal.pkg_dest }}"
+    - "{{ adminer.document_root }}"

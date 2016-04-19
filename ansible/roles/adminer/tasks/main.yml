@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: adminer.install
+
+- include: uninstall.yml
+  when: not adminer.install
