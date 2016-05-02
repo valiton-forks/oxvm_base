@@ -19,14 +19,14 @@
   apache2_module: state=absent name={{ item }}
   when: not mailhog.install
   notify: restart apache
-  with_items: mailhog.apache_modules|reverse|list
+  with_items: "{{ mailhog.apache_modules|reverse|list }}"
 
 - name: Install Apache Modules for mailhog
   become: yes
   apache2_module: state=present name={{ item }}
   when: mailhog.install
   notify: restart apache
-  with_items: mailhog.apache_modules
+  with_items: "{{ mailhog.apache_modules }}"
 
 - shell: apache2 -v
   register: apache_version
