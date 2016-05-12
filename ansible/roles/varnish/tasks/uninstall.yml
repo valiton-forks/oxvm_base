@@ -10,5 +10,5 @@
 
 - name: Restore old install configuration
   become: yes
-  local_copy: src=/etc/varnish/default.vcl.install_backup dest=/etc/varnish/default.vcl
+  copy: src=/etc/varnish/default.vcl.install_backup dest=/etc/varnish/default.vcl remote_src=true
   when: uninstall_varnish.changed

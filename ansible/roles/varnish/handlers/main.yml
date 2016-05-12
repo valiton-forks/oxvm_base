@@ -15,7 +15,7 @@
 
 - name: update custom default varnish configuration
   become: yes
-  local_copy: src={{ varnish.default_config.source }} dest={{ varnish.default_config.target }}
+  copy: src={{ varnish.default_config.source }} dest={{ varnish.default_config.target }} remote_src=true
   notify: restart varnish
 
 - name: restart varnish

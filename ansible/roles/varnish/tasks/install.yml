@@ -25,7 +25,7 @@
 
 - name: Make install configuration backup
   become: yes
-  local_copy: src={{ varnish.default_config.target }} dest={{ varnish.default_config.target }}.install_backup
+  copy: src={{ varnish.default_config.target }} dest={{ varnish.default_config.target }}.install_backup remote_src=true
   when: not install_backup_result.stat.exists and varnish_install.changed
 
 - name: Get hash of existing Varnish default configuration
@@ -35,7 +35,7 @@
 
 - name: Restore installed configuration backup
   become: yes
-  local_copy: src={{ varnish.default_config.target }}.install_backup dest={{ varnish.default_config.target }}
+  copy: src={{ varnish.default_config.target }}.install_backup dest={{ varnish.default_config.target }} remote_src=true
   when: not varnish_current_config_result.stat.exists
 
 - name: Get hash of candidate Varnish default configuration
