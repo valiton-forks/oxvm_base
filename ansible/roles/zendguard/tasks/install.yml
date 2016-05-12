@@ -1,4 +1,12 @@
 ---
+- name: Stop execution of ansible and show how to proceed
+  fail:
+    msg: >
+      Current zendguard integration does not support custom php versions.
+      Please disable support of zendguard (php.zendguard.install: false) or
+      disable custom php version (remove php.version entry).
+  when: php.version
+
 - stat: path=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64.tar.gz
   register: zendGuardArchive
 
@@ -7,13 +15,13 @@
   get_url: url="https://github.com/OXID-eSales/oxvm_assets/blob/master/zend-loader-php5.5-linux-x86_64.tar.gz?raw=true" dest="/usr/lib/php5/20121212/"
   when: zendGuardArchive.stat.exists == False
 
-- unarchive: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64.tar.gz dest=/usr/lib/php5/20121212/
+- unarchive: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64.tar.gz dest=/usr/lib/php5/20121212/ copy=no
   become: yes
 
-- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/ZendGuardLoader.so dest=/usr/lib/php5/20121212/ZendGuardLoader.so
+- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/ZendGuardLoader.so dest=/usr/lib/php5/20121212/ZendGuardLoader.so remote_src=true
   become: yes
 
-- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/opcache.so dest=/usr/lib/php5/20121212/zend_opcache.so
+- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/opcache.so dest=/usr/lib/php5/20121212/zend_opcache.so remote_src=true
   become: yes
 
 - name: Place ZendGuard configuration
