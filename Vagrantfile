@@ -10,7 +10,7 @@ require "#{base_vm_path}/ansible/ruby/get_ansible_version.rb"
 
 Vagrant.require_version ">= 1.7"
 
-required_plugins = ['vagrant-bindfs', 'vagrant-hostmanager', 'vagrant-triggers']
+required_plugins = ['vagrant-hostmanager', 'vagrant-triggers']
 
 required_plugins.each do |plugin|
   if !Vagrant.has_plugin?(plugin)
@@ -44,9 +44,8 @@ def override_shared_folder(override, vm_config, provider)
     asf["sync_type"] = vm_config["provider_specific"][provider]["app_shared_folder"]["sync_type"]
   end
 
-  if Vagrant.has_plugin?('vagrant-bindfs')
+  if asf.has_key?("bindfs") && asf["bindfs"]
     override.vm.synced_folder asf["source"], "/mnt/asf", id: "asf", type: asf["sync_type"]
-    override.bindfs.bind_folder "/mnt/asf", asf["target"], owner: asf["owner"], group: asf["group"], perms: asf["permissions"]
   else
     override.vm.synced_folder asf["source"], asf["target"], type: asf["syncType"]
   end

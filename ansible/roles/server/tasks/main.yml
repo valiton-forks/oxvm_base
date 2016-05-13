@@ -63,3 +63,6 @@
   shell: locale-gen {{server.locale}}
 
 - include: fixup.yml
+
+- include: bindfs.yml
+  when: vagrant_local.vm.app_shared_folder.bindfs
