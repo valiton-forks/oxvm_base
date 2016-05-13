@@ -17,6 +17,7 @@ vagrant_local:
       owner: vagrant
       group: vagrant
       permissions: u=rwX:g=rwX:o=rD
+      bindfs: true
     provider_specific:
       parallels:
         base_box: parallels/ubuntu-14.04
