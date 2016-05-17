@@ -35,19 +35,20 @@ end
 
 def override_shared_folder(override, vm_config, provider)
   asf = vm_config["app_shared_folder"]
+  sync_type = asf["sync_type"]
 
   if vm_config.has_key?("provider_specific") &&
     vm_config["provider_specific"].has_key?(provider) &&
     vm_config["provider_specific"][provider].has_key?("app_shared_folder") &&
     vm_config["provider_specific"][provider]["app_shared_folder"].has_key?("sync_type")
 
-    asf["sync_type"] = vm_config["provider_specific"][provider]["app_shared_folder"]["sync_type"]
+    sync_type = vm_config["provider_specific"][provider]["app_shared_folder"]["sync_type"]
   end
 
   if asf.has_key?("bindfs") && asf["bindfs"]
-    override.vm.synced_folder asf["source"], "/mnt/asf", id: "asf", type: asf["sync_type"]
+    override.vm.synced_folder asf["source"], "/mnt/asf", id: "asf", type: sync_type
   else
-    override.vm.synced_folder asf["source"], asf["target"], type: asf["syncType"]
+    override.vm.synced_folder asf["source"], asf["target"], type: sync_type
   end
 end
 
