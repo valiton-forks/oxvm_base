@@ -14,9 +14,7 @@ def get_vm_variables_from_ansible(pwd, playbook)
     if File.exists?(variable_yaml_file) then
       file_variables = YAML.load_file(variable_yaml_file)
 
-      if file_variables.has_key?("vagrant_local") && file_variables["vagrant_local"].has_key?("vm") then
-        variables.deep_merge!(file_variables["vagrant_local"]["vm"])
-      end
+      variables.deep_merge!(file_variables)
     end
   }
 

@@ -20,7 +20,9 @@ end
 
 default_playbook_name = "playbook"
 playbook_name = ENV['PLAYBOOK'] ? ENV['PLAYBOOK'] : default_playbook_name
-vm_config = get_vm_variables_from_ansible(vm_path, playbook_name)
+
+yaml_config = get_vm_variables_from_ansible(vm_path, playbook_name)
+vm_config = yaml_config["vagrant_local"]["vm"]
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] = vm_config["provider"]
 
@@ -133,4 +135,8 @@ Vagrant.configure("2") do |config|
       path: "#{base_vm_path}/ansible/provision.sh",
       args: [playbook_name]
   end
+end
+
+if ENV["CONFIG"] == "1"
+  puts yaml_config.to_yaml
 end
