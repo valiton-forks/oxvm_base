@@ -34,6 +34,7 @@ server:
   unattended_upgrade: false
   packages: ~
   personal_packages: ~
+  forceless_umount_url: https://github.com/OXID-eSales/oxvm_assets/blob/master/umount?raw=true
 apache:
   install: true
   docroot: /vagrant

@@ -27,3 +27,11 @@
   become: yes
   template: src=20auto-upgrades_on dest=/etc/apt/apt.conf.d/20auto-upgrades
   when: server.unattended_upgrade
+
+# Workaround for https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1402834
+- name: Use force-less umount
+  become: yes
+  get_url:
+    url: "{{ server.forceless_umount_url }}"
+    dest: /bin/umount
+    force: yes
