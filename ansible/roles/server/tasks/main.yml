@@ -66,3 +66,4 @@
 
 - include: bindfs.yml
   when: vagrant_local.vm.app_shared_folder.bindfs
+  tags: [bindfs]

@@ -129,11 +129,20 @@ Vagrant.configure("2") do |config|
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "#{vm_path}/ansible/#{playbook_name}.yml"
     end
+    config.vm.provision "ansible", run: "always" do |ansible|
+      ansible.playbook = "#{vm_path}/ansible/#{playbook_name}.yml"
+      ansible.tags = ["bindfs"]
+    end
   else
     config.vm.provision :shell,
       keep_color: true,
       path: "#{base_vm_path}/ansible/provision.sh",
       args: [playbook_name]
+    config.vm.provision :shell,
+      keep_color: true,
+      path: "#{base_vm_path}/ansible/provision.sh",
+      args: [playbook_name, "bindfs"],
+      run: "always"
   end
 end
 

@@ -36,4 +36,8 @@ if [ ! -f /root/ansible_ready ]; then
   chmod 666 /etc/ansible/hosts
 fi
 
-cd /vagrant && sudo -u vagrant HOME=/home/vagrant /usr/bin/python2 -u /usr/bin/ansible-playbook /vagrant/ansible/$1.yml --connection=local
+if [ -z "$2" ]; then
+  cd /vagrant && sudo -u vagrant HOME=/home/vagrant /usr/bin/python2 -u /usr/bin/ansible-playbook /vagrant/ansible/$1.yml --connection=local
+else
+  cd /vagrant && sudo -u vagrant HOME=/home/vagrant /usr/bin/python2 -u /usr/bin/ansible-playbook /vagrant/ansible/$1.yml --tags "$2" --connection=local
+fi
