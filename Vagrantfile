@@ -113,7 +113,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provider :lxc do |v, override|
-    v.backingstore = "aufs"
+    v.backingstore = "dir"
     override_base_box(override, vm_config, "lxc")
     override_shared_folder(override, vm_config, "lxc")
     override_network(override, vm_config, "lxc")
