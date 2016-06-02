@@ -70,6 +70,7 @@ php:
   pecl_packages: ~
   zendguard:
     install: false
+    pkg_url: https://github.com/OXID-eSales/oxvm_assets/blob/master/zend-loader-php5.5-linux-x86_64.tar.gz?raw=true
   ioncube:
     install: false
     pkg_url: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_5.1.2.tar.gz
