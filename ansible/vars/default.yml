@@ -70,6 +70,9 @@ php:
   pecl_packages: ~
   zendguard:
     install: false
+  ioncube:
+    install: false
+    pkg_url: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_5.1.2.tar.gz
 mailhog:
   install: false
   web_port: 8025

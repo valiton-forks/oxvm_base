@@ -9,5 +9,6 @@ dependencies:
   - adminer_editor
   - xdebug
   - zendguard
+  - ioncube
   - composer
   - varnish

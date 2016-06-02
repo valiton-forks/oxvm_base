@@ -1,0 +1,45 @@
+---
+- name: Stop execution of ansible and show how to proceed
+  fail:
+    msg: >
+      Current ioncube integration does not support custom php versions.
+      Please disable support of ioncube (php.ioncube.install: false) or
+      disable custom php version (remove php.version entry).
+  when: php.version
+
+- name: Stop execution of ansible and show how to proceed
+  fail:
+    msg: >
+      Current ioncube integration does not support zendguard integration at
+      the same time.
+      Please disable support of ioncube (php.ioncube.install: false) or
+      disable support of zendguard (php.zendguard.install: false).
+  when: php.zendguard.install
+
+- stat: path=/usr/lib/php5/20121212/ioncube_loaders_lin_x86-64_5.1.2.tar.gz
+  register: ioncube_archive
+
+- name: Download the IonCube shared object files
+  become: yes
+  get_url: url="{{ php.ioncube.pkg_url }}" dest="/usr/lib/php5/20121212/"
+  when: ioncube_archive.stat.exists == False
+
+- unarchive: src=/usr/lib/php5/20121212/ioncube_loaders_lin_x86-64_5.1.2.tar.gz dest=/usr/lib/php5/20121212/ copy=no
+  become: yes
+
+- copy: src=/usr/lib/php5/20121212/ioncube/ioncube_loader_lin_5.5.so dest=/usr/lib/php5/20121212/ioncube.so remote_src=true
+  become: yes
+
+- name: Place IonCube configuration
+  become: yes
+  template: src=ioncube.ini dest=/etc/php5/mods-available/ioncube.ini
+
+- name: Disable standard PHP5 opcache
+  become: yes
+  command: php5dismod opcache
+  notify: restart apache
+
+- name: Enable IonCube opcache
+  become: yes
+  command: php5enmod ioncube
+  notify: restart apache
