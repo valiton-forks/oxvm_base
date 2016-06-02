@@ -52,6 +52,7 @@ php:
   install: true
   packages: [php5-cli, php5-intl, php5-mcrypt, php5-mysql, php5-gd, php5-curl]
   version: ~
+  display_errors: On
   phpbrew:
     cache:
       repo: 'https://github.com/OXID-eSales/oxvm_assets'
