@@ -135,3 +135,11 @@
     login_password: "{{ mysql.root_password }}"
     target: "/vagrant/{{ mysql.dump }}"
   when: mysql.dump
+
+- name: Enable replication
+  include: replication_on.yml
+  when: mysql.replication.enable
+
+- name: Disable replication
+  include: replication_off.yml
+  when: not mysql.replication.enable

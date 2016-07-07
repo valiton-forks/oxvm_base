@@ -1,0 +1,22 @@
+---
+- name: Disable master replication
+  include: master_off.yml
+  when: mysql.replication.role == 'master'
+
+- name: Disable slave replication
+  include: slave_off.yml
+  when: mysql.replication.role == 'slave'
+
+- name: Remove replication configuration for MySQL service
+  become: yes
+  file:
+    path: /etc/mysql/conf.d/replication.cnf
+    state: absent
+  register: mysql_server_replication_configuration
+
+- name: Restart MySQL if necessary
+  become: yes
+  service:
+    name: mysql
+    state: restarted
+  when: mysql_server_replication_configuration.changed

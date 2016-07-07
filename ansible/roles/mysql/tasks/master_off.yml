@@ -1,0 +1,11 @@
+---
+- name: Update access hosts for root user as master role
+  mysql_user: state=absent name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
+  with_items: mysql.replication.master.accept_slave_hosts
+
+- name: Remove the slave user for replication process in master server
+  mysql_user:
+    name: "{{ mysql.replication.slave.user }}"
+    state: absent
+    login_user: root
+    login_password: "{{ mysql.root_password }}"

@@ -1,0 +1,37 @@
+---
+- name: Check public access of MySQL server
+  fail:
+    msg: "MySQL server must have public access in order for replication to work. Please specify: 'mysql.public' to 'True'."
+  when: not mysql.public
+
+- name: Set variables for MySQL service with master role
+  set_fact:
+    mysql_replication_server_id: "{{ mysql.replication.master.server_id }}"
+  when: mysql.replication.role == 'master'
+
+- name: Set variables for MySQL service with slave role
+  set_fact:
+    mysql_replication_server_id: "{{ mysql.replication.slave.server_id }}"
+  when: mysql.replication.role == 'slave'
+
+- name: Place replication configuration for MySQL service
+  become: yes
+  template:
+    src: replication.cnf
+    dest: /etc/mysql/conf.d/replication.cnf
+  register: mysql_server_replication_configuration
+
+- name: Restart MySQL if necessary
+  become: yes
+  service:
+    name: mysql
+    state: restarted
+  when: mysql_server_replication_configuration.changed
+
+- name: Enable master replication
+  include: master_on.yml
+  when: mysql.replication.role == 'master'
+
+- name: Enable slave replication
+  include: slave_on.yml
+  when: mysql.replication.role == 'slave'

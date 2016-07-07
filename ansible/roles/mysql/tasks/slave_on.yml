@@ -1,0 +1,75 @@
+---
+- name: Validate MySQL replication master host
+  fail:
+    msg: "Please specify a host to master for slave to connect to. Name of the attribute: 'mysql.replication.remote_master.host'."
+  when: not mysql.replication.slave.remote_master.host
+
+- name: Stop slave replication
+  mysql_replication:
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+    mode: stopslave
+
+- name: Delete database
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: absent
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+
+- name: Create database
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+
+- name: Set temporary facts for remote master
+  set_fact:
+    mysql_master_user_tmp: |
+      {{
+        (mysql.replication.slave.remote_master.user) |
+        ternary(mysql.replication.slave.remote_master.user, mysql.user)
+      }}
+    mysql_master_password_tmp: |
+      {{
+        (mysql.replication.slave.remote_master.password) |
+        ternary(mysql.replication.slave.remote_master.password, mysql.password)
+      }}
+
+- name: Set facts for remote master
+  set_fact:
+    mysql_master_host: "{{ mysql.replication.slave.remote_master.host }}"
+    mysql_master_port: "{{ mysql.replication.slave.remote_master.port }}"
+    mysql_master_user: "{{ mysql_master_user_tmp | replace('\n', '') }}"
+    mysql_master_password: "{{ mysql_master_password_tmp | replace('\n', '') }}"
+
+- name: Get information from master
+  mysql_replication:
+    login_host: "{{ mysql_master_host }}"
+    login_port: "{{ mysql_master_port }}"
+    login_user: "{{ mysql_master_user }}"
+    login_password: "{{ mysql_master_password }}"
+    mode: getmaster
+  register: master_status
+
+- name: Set new master for slave
+  mysql_replication:
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+    master_log_file: "{{ master_status.File }}"
+    master_log_pos: 0
+    master_host: "{{ mysql_master_host }}"
+    master_port: "{{ mysql_master_port }}"
+    master_user: "{{ mysql_master_user }}"
+    master_password: "{{ mysql_master_password }}"
+    mode: changemaster
+
+- name: Start slave replication
+  mysql_replication:
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+    mode: startslave

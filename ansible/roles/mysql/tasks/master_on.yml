@@ -1,0 +1,20 @@
+---
+- name: Add privileges for replication
+  mysql_user:
+    append_privs: yes
+    host: "%"
+    name: "{{ mysql.user }}"
+    password: "{{ mysql.password }}"
+    priv: "*.*:REPLICATION CLIENT,REPLICATION SLAVE"
+    state: present
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+  register: add_privileges_for_slave
+
+- name: Flush privileges
+  shell: |
+    echo "FLUSH PRIVILEGES;" |
+      mysql -u root -p"{{ mysql.root_password }}"
+  args:
+    executable: /bin/bash
+  when: add_privileges_for_slave.changed

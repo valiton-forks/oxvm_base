@@ -1,0 +1,7 @@
+---
+- name: Stop slave replication
+  mysql_replication:
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+    mode: stopslave
