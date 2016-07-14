@@ -125,9 +125,16 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
+  if ENV.has_key?('ANSIBLE_TAGS') && !ENV['ANSIBLE_TAGS'].empty?
+    ansible_tags = ENV['ANSIBLE_TAGS'].split(',')
+  else
+    ansible_tags = []
+  end
+
   if which('ansible-playbook') && Gem::Version.new(get_ansible_version()) >= Gem::Version.new('2.0.0')
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "#{vm_path}/ansible/#{playbook_name}.yml"
+      ansible.tags = ansible_tags.empty? ? nil : ansible_tags
     end
     config.vm.provision "ansible", run: "always" do |ansible|
       ansible.playbook = "#{vm_path}/ansible/#{playbook_name}.yml"
@@ -137,7 +144,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell,
       keep_color: true,
       path: "#{base_vm_path}/ansible/provision.sh",
-      args: [playbook_name]
+      args: [playbook_name] + (ansible_tags.empty? ? [] : [ansible_tags.join(',')])
     config.vm.provision :shell,
       keep_color: true,
       path: "#{base_vm_path}/ansible/provision.sh",
