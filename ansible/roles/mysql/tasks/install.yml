@@ -13,9 +13,50 @@
     - mysql-client
     - python-mysqldb
 
+- name: Enable public access to the MySQL service
+  become: yes
+  lineinfile:
+    dest: /etc/mysql/my.cnf
+    state: absent
+    regexp: "bind-address"
+  when: mysql.public
+  register: mysql_server_public_access_on
+
+- name: Disable public access to the MySQL service
+  become: yes
+  lineinfile:
+    dest: /etc/mysql/my.cnf
+    state: present
+    regexp: "^bind-address"
+    line: "bind-address = 127.0.0.1"
+    insertafter: '\[mysqld\]'
+  when: not mysql.public
+  register: mysql_server_public_access_off
+
 - name: Ensure MySQL service running
   become: yes
-  service: name=mysql state=started enabled=yes
+  service: name=mysql state=started
+  register: mysql_server_status
+
+- name: Restart MySQL if necessary
+  become: yes
+  service:
+    name: mysql
+    state: restarted
+  when: >
+    not mysql_server_status.changed
+      and
+    (
+      true in
+        [
+          mysql_server_public_access_on.changed,
+          mysql_server_public_access_off.changed
+        ]
+    )
+
+- name: Ensure MySQL service is enabled
+  become: yes
+  service: name=mysql enabled=yes
 
 - name: Update root password for all root accounts
   mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
