@@ -59,25 +59,79 @@
   service: name=mysql enabled=yes
 
 - name: Update root password for all root accounts
-  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
+  mysql_user:
+    name: root
+    priv: "*.*:ALL,GRANT"
+    host: "{{ item }}"
+    check_implicit_admin: yes
+    password: "{{ mysql.root_password }}"
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
   with_items:
     - "{{ current_hostname.stdout | lower }}"
     - 127.0.0.1
     - ::1
     - localhost
+  register: update_root_password
 
-- name: Create databases
-  mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
-
-- name: Import dump
-  mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}
-  when: mysql.dump
+- name: Disable root account for public access
+  mysql_user:
+    name: root
+    host: '%'
+    state: absent
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+  register: disable_root_public_account
 
 - name: Ensure anonymous users are not in the database
-  mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql.root_password }}
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
   with_items:
     - localhost
     - "{{ current_hostname.stdout | lower }}"
+    - "%"
+  register: remove_anonymous_users
 
-- name: Create users
-  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+- name: Add main application user
+  mysql_user:
+    host: "%"
+    name: "{{ mysql.user }}"
+    password: "{{ mysql.password }}"
+    priv: "{{ mysql.database }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+  register: add_main_app_user
+
+- name: Flush privileges
+  shell: |
+    echo "FLUSH PRIVILEGES;" | mysql -u root -p"{{ mysql.root_password }}"
+  args:
+    executable: /bin/bash
+  when: >
+    true in [
+      update_root_password.changed,
+      disable_root_public_account.changed,
+      remove_anonymous_users.changed,
+      add_main_app_user.changed
+    ]
+
+- name: Create databases
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+
+- name: Import dump
+  mysql_db:
+    name: "{{ mysql.database }}"
+    state: import
+    login_user: root
+    login_password: "{{ mysql.root_password }}"
+    target: "/vagrant/{{ mysql.dump }}"
+  when: mysql.dump
