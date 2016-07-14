@@ -131,7 +131,7 @@ Vagrant.configure("2") do |config|
     end
     config.vm.provision "ansible", run: "always" do |ansible|
       ansible.playbook = "#{vm_path}/ansible/#{playbook_name}.yml"
-      ansible.tags = ["always"]
+      ansible.tags = ["internal_always"]
     end
   else
     config.vm.provision :shell,
@@ -141,7 +141,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell,
       keep_color: true,
       path: "#{base_vm_path}/ansible/provision.sh",
-      args: [playbook_name, "always"],
+      args: [playbook_name, "internal_always"],
       run: "always"
   end
 end

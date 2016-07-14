@@ -13,7 +13,7 @@
   become: yes
   lineinfile: "dest=/etc/hosts regexp=\"^127\\.0\\.0\\.1\" line=\"127.0.0.1 localhost {{ vagrant_local.vm.hostname }}\" owner=root group=root mode=0644"
   when: not docker
-  tags: [always]
+  tags: [internal_always]
 
 - name: Disable ndots
   become: yes
@@ -67,4 +67,4 @@
 
 - include: bindfs.yml
   when: vagrant_local.vm.app_shared_folder.bindfs
-  tags: [always]
+  tags: [internal_always]
