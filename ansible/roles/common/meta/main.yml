@@ -12,3 +12,5 @@ dependencies:
   - ioncube
   - composer
   - varnish
+  - java
+  - elasticsearch
