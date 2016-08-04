@@ -102,12 +102,11 @@ varnish:
     source: ~
     target: /etc/varnish/default.vcl
 java:
-  install: true
+  install: false
   packages: [openjdk-7-jre]
 elasticsearch:
-  install: true
+  install: false
   repo:
     deb_destination: '/tmp/elasticsearch_2_3_3.deb'
     deb_source: 'https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.3/elasticsearch-2.3.3.deb'
     deb_checksum: 'sha1:8385dda7aa3870a3b13fc1df91d8b750d940700e'
-  default_config:
