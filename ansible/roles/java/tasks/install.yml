@@ -2,5 +2,5 @@
 - name: Install java jre 7 for usage with elasticsearch
   become: yes
   apt: pkg={{ item }} state=latest
-  with_items: java.packages
+  with_items: "{{ java.packages }}"
   when: java.packages
