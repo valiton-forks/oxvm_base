@@ -13,6 +13,7 @@
     dest: "{{ adminer_internal.pkg_dest }}"
     sha256sum: "{{ adminer.pkg_sha256 }}"
     mode: 0755
+    validate_certs: false
 
 - name: Transfer main entry point of adminer
   become: true
