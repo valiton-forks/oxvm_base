@@ -15,13 +15,23 @@
   become: yes
   service: name=mysql state=started enabled=yes
 
-- name: Update root password for all root accounts
-  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
-  with_items:
-    - "{{ current_hostname.stdout | lower }}"
-    - 127.0.0.1
-    - ::1
-    - localhost
+- name: Set root user password
+  # If .my.cnf already exists, this will cause an mysql-root-password update.
+  mysql_user:
+    name: root
+    host: "localhost"
+    check_implicit_admin: yes
+    login_user: root
+    password: "{{ mysql.root_password}}"
+
+- name: Create .my.cnf
+  become: yes
+  template:
+    src: "{{role_path}}/files/client.my.cnf.j2"
+    dest: "{{ansible_env.HOME}}/.my.cnf"
+    owner: vagrant
+    group: vagrant
+    mode: 0600
 
 - name: Create databases
   mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
@@ -29,6 +39,7 @@
 - name: Import dump
   mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}
   when: mysql.dump
+  register: mysql_dump_imported
 
 - name: Ensure anonymous users are not in the database
   mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql.root_password }}
