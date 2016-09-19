@@ -13,6 +13,7 @@
     - headers
     - expires
     - filter
+    - ssl
 
 - name: Uninstall Apache Modules for mailhog
   become: yes
