@@ -1,3 +1,5 @@
 ---
 - include: install.yml
   when: php.install
+  tags:
+    - php

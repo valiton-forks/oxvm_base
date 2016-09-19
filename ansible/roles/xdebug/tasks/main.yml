@@ -1,3 +1,5 @@
 ---
 - include: install.yml
   when: php.xdebug.install
+  tags:
+    - php
