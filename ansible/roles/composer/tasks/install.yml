@@ -1,3 +1,9 @@
+- name: Install unzip
+  become: yes
+  apt:
+    name: unzip
+    state: present
+
 - name: Download Composer installer
   become: yes
   get_url: url={{ php.composer.installer_url }} dest=/tmp/composer_installer

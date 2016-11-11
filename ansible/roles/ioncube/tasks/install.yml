@@ -16,30 +16,30 @@
       disable support of zendguard (php.zendguard.install: false).
   when: php.zendguard.install
 
-- stat: path=/usr/lib/php5/20121212/ioncube_loaders_lin_x86-64_5.1.2.tar.gz
+- stat: path=/usr/lib/php/20131226/ioncube_loaders_lin_x86-64_6.0.6.tar.gz
   register: ioncube_archive
 
 - name: Download the IonCube shared object files
   become: yes
-  get_url: url="{{ php.ioncube.pkg_url }}" dest="/usr/lib/php5/20121212/"
+  get_url: url="{{ php.ioncube.pkg_url }}" dest="/usr/lib/php/20131226/"
   when: ioncube_archive.stat.exists == False
 
-- unarchive: src=/usr/lib/php5/20121212/ioncube_loaders_lin_x86-64_5.1.2.tar.gz dest=/usr/lib/php5/20121212/ copy=no
+- unarchive: src=/usr/lib/php/20131226/ioncube_loaders_lin_x86-64_6.0.6.tar.gz dest=/usr/lib/php/20131226/ copy=no
   become: yes
 
-- copy: src=/usr/lib/php5/20121212/ioncube/ioncube_loader_lin_5.5.so dest=/usr/lib/php5/20121212/ioncube.so remote_src=true
+- copy: src=/usr/lib/php/20131226/ioncube/ioncube_loader_lin_5.6.so dest=/usr/lib/php/20131226/ioncube.so remote_src=true
   become: yes
 
 - name: Place IonCube configuration
   become: yes
-  template: src=ioncube.ini dest=/etc/php5/mods-available/ioncube.ini
+  template: src=ioncube.ini dest=/etc/php/5.6/mods-available/ioncube.ini
 
 - name: Disable standard PHP5 opcache
   become: yes
-  command: php5dismod opcache
+  command: phpdismod opcache
   notify: restart apache
 
 - name: Enable IonCube opcache
   become: yes
-  command: php5enmod ioncube
+  command: phpenmod ioncube
   notify: restart apache

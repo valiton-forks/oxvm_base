@@ -50,7 +50,15 @@ mysql:
   dump: ''
 php:
   install: true
-  packages: [php5-cli, php5-intl, php5-mcrypt, php5-mysql, php5-gd, php5-curl]
+  packages:
+    - php5.6-cli
+    - php5.6-intl
+    - php5.6-mcrypt
+    - php5.6-mysql
+    - php5.6-gd
+    - php5.6-curl
+    - php5.6-xml
+    - php5.6-zip
   version: ~
   display_errors: On
   phpbrew:
@@ -71,10 +79,10 @@ php:
   pecl_packages: ~
   zendguard:
     install: false
-    pkg_url: https://github.com/OXID-eSales/oxvm_assets/blob/master/zend-loader-php5.5-linux-x86_64.tar.gz?raw=true
+    pkg_url: https://github.com/OXID-eSales/oxvm_assets/blob/master/zend-loader-php5.6-linux-x86_64.tar.gz?raw=true
   ioncube:
     install: false
-    pkg_url: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_5.1.2.tar.gz
+    pkg_url: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_6.0.6.tar.gz
 mailhog:
   install: false
   web_port: 8025

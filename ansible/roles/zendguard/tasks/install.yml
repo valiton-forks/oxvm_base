@@ -7,33 +7,33 @@
       disable custom php version (remove php.version entry).
   when: php.version
 
-- stat: path=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64.tar.gz
+- stat: path=/usr/lib/php/20131226/zend-loader-php5.6-linux-x86_64.tar.gz
   register: zendGuardArchive
 
 - name: Download the ZendGuard shared object files
   become: yes
-  get_url: url="{{ php.zendguard.pkg_url }}" dest="/usr/lib/php5/20121212/"
+  get_url: url="{{ php.zendguard.pkg_url }}" dest="/usr/lib/php/20131226/"
   when: zendGuardArchive.stat.exists == False
 
-- unarchive: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64.tar.gz dest=/usr/lib/php5/20121212/ copy=no
+- unarchive: src=/usr/lib/php/20131226/zend-loader-php5.6-linux-x86_64.tar.gz dest=/usr/lib/php/20131226/ copy=no
   become: yes
 
-- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/ZendGuardLoader.so dest=/usr/lib/php5/20121212/ZendGuardLoader.so remote_src=true
+- copy: src=/usr/lib/php/20131226/zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so dest=/usr/lib/php/20131226/ZendGuardLoader.so remote_src=true
   become: yes
 
-- copy: src=/usr/lib/php5/20121212/zend-loader-php5.5-linux-x86_64/opcache.so dest=/usr/lib/php5/20121212/zend_opcache.so remote_src=true
+- copy: src=/usr/lib/php/20131226/zend-loader-php5.6-linux-x86_64/opcache.so dest=/usr/lib/php/20131226/zend_opcache.so remote_src=true
   become: yes
 
 - name: Place ZendGuard configuration
   become: yes
-  template: src=zend.ini dest=/etc/php5/mods-available/zend.ini
+  template: src=zend.ini dest=/etc/php/5.6/mods-available/zend.ini
 
 - name: Disable standard PHP5 opcache
   become: yes
-  command: php5dismod opcache
+  command: phpdismod opcache
   notify: restart apache
 
 - name: Enable ZendGuard opcache
   become: yes
-  command: php5enmod zend
+  command: phpenmod zend
   notify: restart apache

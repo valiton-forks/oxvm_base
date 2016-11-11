@@ -1,8 +1,8 @@
 ---
-- stat: path=/etc/php5/apache2/php.ini
+- stat: path=/etc/php/5.6/apache2/php.ini
   register: modphp
 
-- stat: path=/etc/php5/cli/php.ini
+- stat: path=/etc/php/5.6/cli/php.ini
   register: phpcli
 
 - include: php-cli.yml
