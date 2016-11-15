@@ -30,3 +30,7 @@
 - name: Uninstall prestissimo
   shell: composer global remove hirak/prestissimo
   when: not php.composer.prestissimo.install and global_composer_json.stat.exists
+
+- name: Set process timeout for composer
+  shell: "composer config --global process-timeout {{ php.composer.timeout }}"
+  when: php.composer.timeout

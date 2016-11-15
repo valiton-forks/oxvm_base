@@ -71,6 +71,7 @@ php:
     install: '1'
     host: ~
   composer:
+    timeout: false
     installer_url: https://getcomposer.org/installer
     install: '1'
     github_token: ~
