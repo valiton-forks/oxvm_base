@@ -13,7 +13,7 @@ vagrant_local:
     app_shared_folder:
       source: ./
       target: /var/www
-      sync_type: nfs
+      sync_type: ~
       owner: vagrant
       group: vagrant
       permissions: u=rwX:g=rwX:o=rD
