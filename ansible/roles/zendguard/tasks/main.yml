@@ -3,3 +3,4 @@
   when: php.zendguard.install
   tags:
     - php
+    - zendguard

@@ -1,3 +1,6 @@
 ---
 - include: install.yml
   when: elasticsearch.install
+  tags:
+    - elasticsearch
+    - java

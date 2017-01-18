@@ -1,6 +1,12 @@
 ---
 - include: install.yml
   when: adminer.install
+  tags:
+    - mysql
+    - adminer
 
 - include: uninstall.yml
   when: not adminer.install
+  tags:
+    - mysql
+    - adminer

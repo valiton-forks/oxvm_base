@@ -1,3 +1,6 @@
 ---
 - include: install.yml
   when: php.ioncube.install
+  tags:
+    - php
+    - ioncube

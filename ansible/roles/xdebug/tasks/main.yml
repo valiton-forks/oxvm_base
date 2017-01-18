@@ -3,3 +3,4 @@
   when: php.xdebug.install
   tags:
     - php
+    - xdebug
