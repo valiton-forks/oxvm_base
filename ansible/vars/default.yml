@@ -4,9 +4,9 @@ vagrant_local:
     name: default
     provider: virtualbox
     base_box: ubuntu/trusty64
-    hostname: default.dev
+    hostname: default.local
     aliases:
-      - www.default.dev
+      - www.default.local
     ip: 192.168.123.2
     memory: '512'
     cpus: 1
