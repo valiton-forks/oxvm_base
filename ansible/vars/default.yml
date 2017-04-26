@@ -112,7 +112,7 @@ varnish:
     target: /etc/varnish/default.vcl
 java:
   install: false
-  packages: [openjdk-7-jre]
+  packages: [openjdk-7-jre-headless]
 elasticsearch:
   install: false
   repo:
