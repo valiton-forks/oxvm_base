@@ -3,6 +3,6 @@ adminer_editor_internal:
   pkg_dest: "{{ adminer_editor.document_root }}/{{ adminer_editor.pkg_name }}"
   pkg_entry_point: "{{ adminer_editor.document_root }}/index.php"
 adminer_editor:
-  pkg_name: "editor-4.2.5-mysql-en.php"
-  pkg_sha256: "d38ab970fd03bb456ec418c79b4e61c824951d447d7d706e2b442d6940995061"
+  pkg_name: "editor-4.3.1-mysql-en.php"
+  pkg_sha256: "0b29f11daeadf7968e195635f4e0fe950762eaeb84af23ec2fbb4d85c9cf3165"
   document_root: "/opt/adminer_editor/"
