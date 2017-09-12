@@ -101,8 +101,8 @@ adminer_editor:
 varnish:
   install: false
   repo:
-    source: 'deb https://repo.varnish-cache.org/ubuntu/ trusty varnish-4.0'
-    key: 'https://repo.varnish-cache.org/GPG-key.txt'
+    source: 'deb https://packagecloud.io/varnishcache/varnish40/ubuntu/ trusty main'
+    key: 'https://packagecloud.io/varnishcache/varnish40/gpgkey'
     https: '1'
   daemon_path: /usr/sbin/varnishd
   package_name: varnish
