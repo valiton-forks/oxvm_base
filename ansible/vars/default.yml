@@ -11,7 +11,7 @@ vagrant_local:
     memory: '512'
     cpus: 1
     app_shared_folder:
-      source: ./
+      source: www
       target: /var/www
       sync_type: ~
       owner: vagrant
@@ -30,15 +30,17 @@ docker: false
 server:
   timezone: Europe/Berlin
   locale: en_US.UTF-8
-  apt_mirror: http://us.archive.ubuntu.com/ubuntu/
+  apt_mirror: http://de.archive.ubuntu.com/ubuntu/
   unattended_upgrade: false
   packages: ~
   personal_packages: ~
   forceless_umount_url: https://github.com/OXID-eSales/oxvm_assets/blob/master/umount?raw=true
+landing:
+  install: true
 apache:
   install: true
-  docroot: /vagrant
-  servername: myApp.vb
+  docroot: /var/www
+  servername: "{{ vagrant_local.vm.hostname }}"
   user: "{{ vagrant_local.vm.app_shared_folder.owner }}"
   group: "{{ vagrant_local.vm.app_shared_folder.group }}"
 mysql:
@@ -118,3 +120,12 @@ elasticsearch:
     deb_destination: '/tmp/elasticsearch_2_3_3.deb'
     deb_source: 'https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.3/elasticsearch-2.3.3.deb'
     deb_checksum: 'sha1:8385dda7aa3870a3b13fc1df91d8b750d940700e'
+selenium:
+  install: false
+  package:
+    firefox:
+      deb_url: https://github.com/OXID-eSales/oxvm_assets/raw/master/firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
+      deb_checksum: sha256:41c3a02d304a26e10c237516c773ba51d93eb2b11e5a82292bb47b26bb2ba859
+    self:
+      jar_url: https://github.com/OXID-eSales/oxvm_assets/raw/master/selenium-server-standalone-2.47.1.jar
+      jar_checksum: sha256:45665f3bb4dffb668981258faff91823db4a1f6250fd24fd6698ec159a4aeb8a

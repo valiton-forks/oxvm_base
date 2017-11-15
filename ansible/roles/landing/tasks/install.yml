@@ -1,0 +1,7 @@
+---
+- name: Copy the landing page to docroot
+  copy: src=../www/index.html dest="{{ apache.docroot }}/index.html" force=no
+
+- name: Copy the logo to docroot
+  copy: src=../www/logo.png dest="{{ apache.docroot }}/logo.png" force=no
+

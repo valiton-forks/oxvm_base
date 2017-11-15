@@ -1,0 +1,60 @@
+---
+  - name: Install firefox to get all dependencies
+    become: yes
+    apt: name=firefox state=present
+
+  - name: Download fixed firefox version
+    get_url:
+      dest: /tmp/firefox.deb
+      url: "{{ selenium.package.firefox.deb_url }}"
+      checksum: "{{ selenium.package.firefox.deb_checksum }}"
+
+  - name: Install fixed firefox version
+    become: yes
+    shell: "dpkg -i /tmp/firefox.deb && apt-get install -f -y"
+
+  - name: Install dependencies needed for selenium
+    become: yes
+    apt: "name={{ item }} state=present"
+    with_items:
+      - xfce4
+      - xvfb
+      - x11vnc
+      - openjdk-7-jre-headless
+      - rng-tools
+
+  - name: Remove systemd-services
+    become: yes
+    apt: name=systemd-services state=absent
+
+  - name: Disable screensaver
+    become: yes
+    apt:
+      name: xscreensaver
+      state: absent
+
+  - name: Prepare placeholder for selenium
+    become: yes
+    file: path=/opt/selenium state=directory
+
+  - name: Download fixed selenium version
+    become: yes
+    get_url:
+      dest: /opt/selenium/selenium.jar
+      url: "{{ selenium.package.self.jar_url }}"
+      checksum: "{{ selenium.package.self.jar_checksum }}"
+
+  - name: Add selenium init script
+    become: yes
+    template: src=selenium_init_script dest=/etc/init.d/selenium mode=0755
+
+  - name: Add helper scripts
+    become: yes
+    template: "src={{ item }} dest=/opt/selenium/{{ item }} mode=0755"
+    with_items:
+      - 'start_selenium.sh'
+      - 'start_xvfb.sh'
+
+  - name: Start selenium service
+    become: yes
+    service: name=selenium state=started enabled=yes

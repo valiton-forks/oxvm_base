@@ -9,3 +9,6 @@
 
 # Ansible
 personal.yml
+
+# www contents
+www/*

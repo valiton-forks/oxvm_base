@@ -1,6 +1,7 @@
 ---
 dependencies:
   - server
+  - landing
   - apache
   - mysql
   - php
@@ -14,3 +15,4 @@ dependencies:
   - varnish
   - java
   - elasticsearch
+  - selenium
