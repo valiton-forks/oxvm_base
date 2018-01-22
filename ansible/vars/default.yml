@@ -50,6 +50,7 @@ mysql:
   user: user
   password: password
   dump: ''
+  in_memory: false
 php:
   install: true
   packages:

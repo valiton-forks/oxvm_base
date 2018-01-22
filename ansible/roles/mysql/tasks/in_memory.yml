@@ -1,0 +1,43 @@
+- name: Check if mysql is running in memory
+  become: yes
+  shell: (cat /etc/mtab | grep /var/lib/mysql | grep tmpfs) && (ps aux | grep mysqld)
+  failed_when: false
+  register: mysql_from_memory
+
+- name: Temporarily stop mysql
+  become: yes
+  service:
+    name: mysql
+    state: stopped
+  when: mysql_from_memory.rc != 0
+
+- name: Make backup
+  become: yes
+  shell: cp -r /var/lib/mysql/. /var/lib/mysql_
+  when: mysql_from_memory.rc != 0
+
+- name: Mount tmpfs on /var/lib/mysql
+  become: yes
+  mount:
+    name: /var/lib/mysql
+    src: tmpfs
+    fstype: tmpfs
+    state: mounted
+  when: mysql_from_memory.rc != 0
+
+- name: Restore backup
+  become: yes
+  shell: cp -r /var/lib/mysql_/. /var/lib/mysql
+  when: mysql_from_memory.rc != 0
+
+- name: Restore ownership
+  become: yes
+  shell: chown -R mysql:mysql /var/lib/mysql
+  when: mysql_from_memory.rc != 0
+
+- name: Start back mysql
+  become: yes
+  service:
+    name: mysql
+    state: started
+  when: mysql_from_memory.rc != 0
