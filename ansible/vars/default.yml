@@ -54,14 +54,14 @@ mysql:
 php:
   install: true
   packages:
-    - php5.6-cli
-    - php5.6-intl
-    - php5.6-mcrypt
-    - php5.6-mysql
-    - php5.6-gd
-    - php5.6-curl
-    - php5.6-xml
-  version: ~
+    - cli
+    - intl
+    - mcrypt
+    - mysql
+    - gd
+    - curl
+    - xml
+  version: 5.6
   display_errors: On
   xdebug:
     install: '1'

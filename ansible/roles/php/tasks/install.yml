@@ -7,13 +7,13 @@
   become: yes
   apt: update_cache=yes
 
-- name: Install php5
+- name: "Install php {{ php.version }}"
   become: yes
-  apt: pkg=php5.6 state=latest
+  apt: pkg="php{{ php.version }}" state=latest
 
 - name: Install PHP Packages
   become: yes
-  apt: pkg={{ item }} state=latest
+  apt: pkg="php{{ php.version }}-{{ item }}" state=latest
   with_items: "{{ php.packages }}"
   when: php.packages is defined
   notify:

@@ -1,20 +1,20 @@
 ---
 - name: ensure timezone is set in apache2 php.ini
   become: yes
-  lineinfile: dest=/etc/php/5.6/apache2/php.ini
+  lineinfile: dest=/etc/php/{{ php.version }}/apache2/php.ini
               regexp='date.timezone ='
               line='date.timezone = {{ server.timezone }}'
 
 - name: enabling opcache
   become: yes
-  lineinfile: dest=/etc/php/5.6/apache2/php.ini
+  lineinfile: dest=/etc/php/{{ php.version }}/apache2/php.ini
               regexp=';?opcache.enable=\d'
               line='opcache.enable=1'
 
 - name: display errors
   become: yes
   lineinfile:
-    dest: /etc/php/5.6/apache2/php.ini
+    dest: /etc/php/{{ php.version }}/apache2/php.ini
     regexp: '^display_errors ='
     line: 'display_errors = {{ php.display_errors }}'
   notify:
