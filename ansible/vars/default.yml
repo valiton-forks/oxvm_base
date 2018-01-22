@@ -63,12 +63,6 @@ php:
     - php5.6-xml
   version: ~
   display_errors: On
-  phpbrew:
-    cache:
-      repo: 'https://github.com/OXID-eSales/oxvm_assets'
-      ref: 'phpbrew_builds'
-      depth: 1
-      update: true
   xdebug:
     install: '1'
     host: ~
