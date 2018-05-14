@@ -3,3 +3,8 @@
   when: java.install
   tags:
     - java
+    
+- include: install.yml
+  when: elasticsearch.install
+  tags:
+    - elasticsearch

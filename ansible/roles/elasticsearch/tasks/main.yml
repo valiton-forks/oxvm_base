@@ -3,4 +3,3 @@
   when: elasticsearch.install
   tags:
     - elasticsearch
-    - java
