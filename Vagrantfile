@@ -71,6 +71,7 @@ def override_network(override, vm_config, provider)
 end
 
 Vagrant.configure("2") do |config|
+  config.vm.synced_folder ".", "/vagrant", mount_options:  ["dmode=775,fmode=664"]
   if defined? config_hook
     config_hook.each do |f|
       f.call(config, vm_config)
