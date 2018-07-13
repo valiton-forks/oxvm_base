@@ -1,0 +1,9 @@
+- name: Turn currently enabled PHP Version off
+  become: yes
+  shell: 'a2dismod `ls /etc/apache2/mods-enabled | grep -e "php.*\.conf" | sed "s/.conf//g"`'
+
+- name: Turn on the new PHP version
+  become: yes
+  shell: "a2enmod php{{ php.version }}"
+  notify:
+    - restart apache
