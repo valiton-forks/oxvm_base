@@ -61,7 +61,7 @@ php:
     - gd
     - curl
     - xml
-  version: 5.6
+  version: 7.1
   display_errors: On
   xdebug:
     install: '1'
