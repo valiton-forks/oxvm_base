@@ -50,24 +50,19 @@ mysql:
   user: user
   password: password
   dump: ''
+  in_memory: false
 php:
   install: true
   packages:
-    - php5.6-cli
-    - php5.6-intl
-    - php5.6-mcrypt
-    - php5.6-mysql
-    - php5.6-gd
-    - php5.6-curl
-    - php5.6-xml
-  version: ~
+    - cli
+    - intl
+    - mcrypt
+    - mysql
+    - gd
+    - curl
+    - xml
+  version: 7.1
   display_errors: On
-  phpbrew:
-    cache:
-      repo: 'https://github.com/OXID-eSales/oxvm_assets'
-      ref: 'phpbrew_builds'
-      depth: 1
-      update: true
   xdebug:
     install: '1'
     host: ~

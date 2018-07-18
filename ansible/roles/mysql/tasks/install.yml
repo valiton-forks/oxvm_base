@@ -49,3 +49,7 @@
 
 - name: Create users
   mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+
+- name: Transfer mysql to in memory storage
+  include: in_memory.yml
+  when: mysql.in_memory
