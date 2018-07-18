@@ -117,6 +117,7 @@ In order to trigger NFS usage inside the VM one has to add the following configu
     vm:
       app_shared_folder:
         sync_type: nfs
+        bindfs: false
 
 Beware that in order for this to work your host system must support NFS server:
 
@@ -128,9 +129,13 @@ Beware that in order for this to work your host system must support NFS server:
   * `RHEL/CentOS <https://www.howtoforge.com/tutorial/setting-up-an-nfs-server-and-client-on-centos-7/>`_
   * `ArchLinux <https://wiki.archlinux.org/index.php/NFS>`_
 
+It is possible to use NFS with Microsoft Windows 10 PRO and up.
+
+* Special plugin required: `vagrant plugin install vagrant-winnfsd`
+  - More information: https://github.com/winnfsd/vagrant-winnfsd
+
 Be aware that NFS also has it's own limitations:
 
-* No server is available for Microsoft Windows
 * NFS uses network stack to share data
 * NFS does not propagate file change events to the guest system
 * Sometimes NFS is complicated to setup/troubleshoot in a non-standard environment
