@@ -3,6 +3,10 @@ pwd = File.dirname(File.expand_path(__FILE__))
 base_vm_path = ENV.has_key?('BASE_VM_PATH') ? ENV['BASE_VM_PATH'] : pwd
 vm_path = ENV.has_key?('VM_PATH') ? ENV['VM_PATH'] : pwd
 
+## BDS_Change: added global $$--
+$global_vm_path = vm_path
+## --$$
+
 require "#{base_vm_path}/ansible/ruby/deep_merge.rb"
 require "#{base_vm_path}/ansible/ruby/get_vm_variables_from_ansible.rb"
 require "#{base_vm_path}/ansible/ruby/which.rb"
@@ -49,10 +53,15 @@ def override_shared_folder(override, vm_config, provider)
   end
 
   if asf.has_key?("bindfs") && asf["bindfs"]
-    override.vm.synced_folder asf["source"], "/mnt/asf", id: "asf", type: sync_type
+    override.vm.synced_folder asf["source"], "/mnt/asf", id: "asf", type: sync_type, mount_options: ["dmode=775,fmode=774"]
   else
-    override.vm.synced_folder asf["source"], asf["target"], type: sync_type
+    override.vm.synced_folder asf["source"], asf["target"], type: sync_type, mount_options: ["dmode=775,fmode=774"]
   end
+
+  ## BDS_Change: added explicit /vagrant synced_folder to be able to set mount_options dmode and fmode $$--
+  ##
+  override.vm.synced_folder "#{$global_vm_path}", "/vagrant", id: "vagrant", type: sync_type, mount_options: ["dmode=775,fmode=774"]
+  ## --$$
 end
 
 def override_network(override, vm_config, provider)
@@ -71,7 +80,7 @@ def override_network(override, vm_config, provider)
 end
 
 Vagrant.configure("2") do |config|
-  config.vm.synced_folder ".", "/vagrant", mount_options:  ["dmode=775,fmode=664"] if Vagrant::Util::Platform.windows?
+#  config.vm.synced_folder ".", "/vagrant", mount_options:  ["dmode=775,fmode=664"] if Vagrant::Util::Platform.windows?
   if defined? config_hook
     config_hook.each do |f|
       f.call(config, vm_config)
