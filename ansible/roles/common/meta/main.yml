@@ -3,6 +3,7 @@ dependencies:
   - server
   - landing
   - apache
+  - apache_bds  ## need to be after apache
   - mysql
   - php
   - mailhog
