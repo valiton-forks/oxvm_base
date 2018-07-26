@@ -23,9 +23,9 @@
     line="domain ."
   notify: Update resolver
 
-- name: Configure Apt source mirror
-  become: yes
-  template: src=sources.tpl dest=/etc/apt/sources.list
+#- name: Configure Apt source mirror
+#  become: yes
+#  template: src=sources.tpl dest=/etc/apt/sources.list
 
 - name: Update apt
   become: yes

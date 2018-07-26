@@ -15,23 +15,31 @@
   become: yes
   service: name=mysql state=started enabled=yes
 
+- name: Check if .my.cnf file exists
+  local_action: stat path="{{ansible_env.HOME}}/.my.cnf"
+  register: stat_myconf
+
 - name: Set root user password
   # If .my.cnf already exists, this will cause an mysql-root-password update.
+  ## BDS_Custom: $$-- Fix, added ansible instruction to execute this task as "sudo".
+  become: yes
+  ## --$$
   mysql_user:
     name: root
     host: "localhost"
     check_implicit_admin: yes
     login_user: root
     password: "{{ mysql.root_password}}"
+  when: stat_myconf.stat.exists == False
 
 - name: Create .my.cnf
-  become: yes
   template:
     src: "{{role_path}}/files/client.my.cnf.j2"
     dest: "{{ansible_env.HOME}}/.my.cnf"
     owner: vagrant
     group: vagrant
     mode: 0600
+  when: stat_myconf.stat.exists == False
 
 - name: Create databases
   mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
