@@ -44,6 +44,7 @@
 - name: Include vars from yaml file
   include_vars:
     file: additionalvhost.yml
+  when: apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
 
 # - name: Check if docroot dir of addtional vhost exists
 #   become: yes
@@ -63,12 +64,12 @@
   become: yes
   template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/002-{{ apache.servername }}.conf
   notify: restart apache
-  when: apache_version.stdout.find('Apache/2.4.') != -1
+  when: apache_version.stdout.find('Apache/2.4.') != -1 and apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
 
 - name: Add addtional vhost in apache2.2
   become: yes
   shell: (>&2 echo "apache2.2 is not supported" && exit 1)
-  when: apache_version.stdout.find('Apache/2.2.') != -1
+  when: apache_version.stdout.find('Apache/2.2.') != -1 and apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
 
 - name: a2ensite 002-{{ apache.servername }}.conf
   become: yes
@@ -76,4 +77,4 @@
   args:
     creates: /etc/apache2/sites-enabled/{{ apache.servername }}.conf
   notify: restart apache
-
+  when: apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
