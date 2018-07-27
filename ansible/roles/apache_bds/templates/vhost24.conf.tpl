@@ -12,8 +12,18 @@
     <IfModule mod_rewrite.c>
         RewriteEngine On
 
+        # in mod_rewrite conditions, OR has higher precedence then AND, thus in 
+        # most simple cases subsequent rules connected by OR will stick 
+        # together, while those "OR-groups" are connected by AND implicitly,
+        # ie.: (a) AND (b OR c) AND (d OR e OR f) AND (g OR h) ...
+        #
+        # at first, multiple ip-adresses can be excluded,
+        # and finally it's required that neither HTTPS nor ENV:HTTPS is set
+        # for the rewrite to be executed.
+        #
+        RewriteCond %{REMOTE_ADDR} !^10\.110\.2\.
+        RewriteCond %{HTTPS} !^on$ [OR]
         RewriteCond %{ENV:HTTPS} !^on$
-        RewriteCond %{SERVER_PROTOCOL} !^https$
         RewriteRule ^(.*)$ %{ENV:baseurl}$1 [L,R=302]
     </IfModule>
 
