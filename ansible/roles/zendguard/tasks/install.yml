@@ -5,7 +5,7 @@
       Current zendguard integration does not support custom php versions.
       Please disable support of zendguard (php.zendguard.install: false) or
       disable custom php version (remove php.version entry).
-  when: php.version and php.version != 5.6
+  when: php.version and php.version != 5.6 and ansible_distribution_version == "16.04"  # ubuntu
 
 - stat: path=/usr/lib/php/20131226/zend-loader-php5.6-linux-x86_64.tar.gz
   register: zendGuardArchive

@@ -1,4 +1,13 @@
 ---
+- name: Remove dir and file of apache install to prevent failure of bindfs mount
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /var/www/html/index.html
+    - /var/www/html
+
 - shell: apache2 -v
   register: apache_version
 
@@ -7,7 +16,7 @@
   command: a2dissite 000-default.conf
   args:
     removes: /etc/apache2/sites-enabled/000-default.conf
-  notify: restart apache
+  notify: restart apache again
 
 # - name: Check if docroot dir exists
 #   become: yes
@@ -26,7 +35,7 @@
 - name: Create main vhost in apache2.4
   become: yes
   template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/001-{{ apache.servername }}.conf
-  notify: restart apache
+  notify: restart apache again
   when: apache_version.stdout.find('Apache/2.4.') != -1
 
 - name: Create main vhost in apache2.2
@@ -38,8 +47,8 @@
   become: yes
   command: a2ensite 001-{{ apache.servername }}.conf
   args:
-    creates: /etc/apache2/sites-enabled/{{ apache.servername }}.conf
-  notify: restart apache
+    creates: /etc/apache2/sites-enabled/001-{{ apache.servername }}.conf
+  notify: restart apache again
 
 - name: Include vars from yaml file
   include_vars:
@@ -63,7 +72,7 @@
 - name: Add addtional vhost in apache2.4
   become: yes
   template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/002-{{ apache.servername }}.conf
-  notify: restart apache
+  notify: restart apache again
   when: apache_version.stdout.find('Apache/2.4.') != -1 and apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
 
 - name: Add addtional vhost in apache2.2
@@ -75,6 +84,6 @@
   become: yes
   command: a2ensite 002-{{ apache.servername }}.conf
   args:
-    creates: /etc/apache2/sites-enabled/{{ apache.servername }}.conf
-  notify: restart apache
+    creates: /etc/apache2/sites-enabled/002-{{ apache.servername }}.conf
+  notify: restart apache again
   when: apache_bds.additionalvhost_docroot is defined and apache_bds.additionalvhost_servername is defined
