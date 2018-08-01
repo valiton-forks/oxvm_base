@@ -6,6 +6,7 @@ dependencies:
   - apache_bds  ## need to be after apache
   - mysql
   - php
+  - php_bds  ## need to be after php
   - mailhog
   - adminer
   - adminer_editor
