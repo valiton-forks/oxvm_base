@@ -16,7 +16,7 @@
   command: a2dissite 000-default.conf
   args:
     removes: /etc/apache2/sites-enabled/000-default.conf
-  notify: restart apache again
+  notify: restart apache
 
 # - name: Check if docroot dir exists
 #   become: yes
@@ -35,7 +35,7 @@
 - name: Create main vhost in apache2.4
   become: yes
   template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/001-{{ apache.servername }}.conf
-  notify: restart apache again
+  notify: restart apache
   when: apache_version.stdout.find('Apache/2.4.') != -1
 
 - name: Create main vhost in apache2.2
@@ -48,4 +48,4 @@
   command: a2ensite 001-{{ apache.servername }}.conf
   args:
     creates: /etc/apache2/sites-enabled/001-{{ apache.servername }}.conf
-  notify: restart apache again
+  notify: restart apache

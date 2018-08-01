@@ -16,7 +16,7 @@
 - name: Add addtional vhost in apache2.4
   become: yes
   template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/002-{{ apache_bds.additionalvhost_servername }}.conf
-  notify: restart apache again
+  notify: restart apache
   when: apache_version.stdout.find('Apache/2.4.') != -1
 
 - name: Add addtional vhost in apache2.2
@@ -29,4 +29,4 @@
   command: a2ensite 002-{{ apache_bds.additionalvhost_servername }}.conf
   args:
     creates: /etc/apache2/sites-enabled/002-{{ apache_bds.additionalvhost_servername }}.conf
-  notify: restart apache again
+  notify: restart apache

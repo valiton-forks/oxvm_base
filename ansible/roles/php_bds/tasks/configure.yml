@@ -4,7 +4,7 @@
   register: phpcli
 
 # check whether yml exists of distribution specific tasks for exact version of distribution and php
-- stat: "php{{ php.version }}-cli-{{ ansible_distribution|lower }}{{ ansible_distribution_version }}.yml"
+- stat: path="php{{ php.version }}-cli-{{ ansible_distribution|lower }}{{ ansible_distribution_version }}.yml"
   register: distribution_specific_php_cli_tasks
 
 # include distribution specific tasks for exact version of distribution and php
