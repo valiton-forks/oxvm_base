@@ -1,6 +1,12 @@
 ---
 - include: install.yml
-  when: apache_bds is defined
+  when: apache.install and apache_bds.install
+  tags:
+    - apache
+    - apache_bds
+
+- include: additionalvhost_tasks.yml
+  when: apache.install and apache_bds.install and apache_bds.additionalvhost_docroot and apache_bds.additionalvhost_servername
   tags:
     - apache
     - apache_bds

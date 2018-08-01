@@ -3,6 +3,10 @@
 - stat: path=/etc/php/{{ php.version }}/cli/php.ini
   register: phpcli
 
-# include distribution specific install for exact version of distribution and php
+# check whether yml exists of distribution specific tasks for exact version of distribution and php
+- stat: "php{{ php.version }}-cli-{{ ansible_distribution|lower }}{{ ansible_distribution_version }}.yml"
+  register: distribution_specific_php_cli_tasks
+
+# include distribution specific tasks for exact version of distribution and php
 - include: "php{{ php.version }}-cli-{{ ansible_distribution|lower }}{{ ansible_distribution_version }}.yml"
-  when: phpcli is defined and phpcli.stat.exists
+  when: phpcli is defined and phpcli.stat.exists and distribution_specific_php_cli_tasks is defined and distribution_specific_php_cli_tasks.stat.exists

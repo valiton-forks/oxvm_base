@@ -1,6 +1,6 @@
 ---
 - include: install.yml
-  when: php.install
+  when: php.install and php_bds.install
   tags:
     - php
     - php_bds

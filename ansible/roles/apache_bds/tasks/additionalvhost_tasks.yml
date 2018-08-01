@@ -1,0 +1,32 @@
+---
+# - name: Check if docroot dir of addtional vhost exists
+#   become: yes
+#   stat:
+#     path: "{{ apache_bds.additionalvhost_docroot }}"
+#   register: file_stat_values
+
+# - name: Create docroot dir of addtional vhost when not mounted yet to prevent error
+#   become: yes
+#   file:
+#     path: "{{ apache_bds.additionalvhost_docroot }}"
+#     state: directory
+#     recurse: yes
+#   when: file_stat_values.stat.exists == false
+
+- name: Add addtional vhost in apache2.4
+  become: yes
+  template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/002-{{ apache_bds.additionalvhost_servername }}.conf
+  notify: restart apache again
+  when: apache_version.stdout.find('Apache/2.4.') != -1
+
+- name: Add addtional vhost in apache2.2
+  become: yes
+  shell: (>&2 echo "apache2.2 is not supported" && exit 1)
+  when: apache_version.stdout.find('Apache/2.2.') != -1
+
+- name: a2ensite 002-{{ apache_bds.additionalvhost_servername }}.conf
+  become: yes
+  command: a2ensite 002-{{ apache_bds.additionalvhost_servername }}.conf
+  args:
+    creates: /etc/apache2/sites-enabled/002-{{ apache_bds.additionalvhost_servername }}.conf
+  notify: restart apache again

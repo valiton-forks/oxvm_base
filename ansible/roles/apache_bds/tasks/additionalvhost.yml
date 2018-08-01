@@ -1,4 +1,0 @@
----
-apache:
-  docroot: "{{ apache_bds.additionalvhost_docroot }}"
-  servername: "{{ apache_bds.additionalvhost_servername }}"

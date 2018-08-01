@@ -124,3 +124,14 @@ selenium:
     self:
       jar_url: https://github.com/OXID-eSales/oxvm_assets/raw/master/selenium-server-standalone-2.47.1.jar
       jar_checksum: sha256:45665f3bb4dffb668981258faff91823db4a1f6250fd24fd6698ec159a4aeb8a
+
+
+apache_bds:
+  install: true
+  additionalvhost_docroot: false
+  additionalvhost_servername: false
+
+php_bds:
+  install: true
+  ubuntu1604_php56cli_logfile: /var/log/apache2/php_errors_cli.log
+

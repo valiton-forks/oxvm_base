@@ -7,11 +7,11 @@
     owner: root
     group: vagrant
     mode: "g+w"
-  when: php_bds is defined and php_bds.ubuntu1604_php56cli_logfile is defined
+  when: php_bds.ubuntu1604_php56cli_logfile
 
 - name: Set logfile in cli php.ini
   become: yes
   lineinfile: dest=/etc/php/{{ php.version }}/cli/php.ini
               regexp=';?error_log = php_errors.log'
               line="error_log = {{ php_bds.ubuntu1604_php56cli_logfile }}"
-  when: php_bds is defined and php_bds.ubuntu1604_php56cli_logfile is defined
+  when: php_bds.ubuntu1604_php56cli_logfile
