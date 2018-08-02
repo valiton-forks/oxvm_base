@@ -17,35 +17,3 @@
   args:
     removes: /etc/apache2/sites-enabled/000-default.conf
   notify: restart apache
-
-# - name: Check if docroot dir exists
-#   become: yes
-#   stat:
-#     path: "{{ apache.docroot }}"
-#   register: file_stat_values
-
-# - name: Create docroot dir when not mounted yet to prevent error
-#   become: yes
-#   file:
-#     path: "{{ apache.docroot }}"
-#     state: directory
-#     recurse: yes
-#   when: file_stat_values.stat.exists == false
-
-- name: Create main vhost in apache2.4
-  become: yes
-  template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/001-{{ apache.servername }}.conf
-  notify: restart apache
-  when: apache_version.stdout.find('Apache/2.4.') != -1
-
-- name: Create main vhost in apache2.2
-  become: yes
-  shell: (>&2 echo "apache2.2 is not supported" && exit 1)
-  when: apache_version.stdout.find('Apache/2.2.') != -1
-
-- name: a2ensite 001-{{ apache.servername }}.conf
-  become: yes
-  command: a2ensite 001-{{ apache.servername }}.conf
-  args:
-    creates: /etc/apache2/sites-enabled/001-{{ apache.servername }}.conf
-  notify: restart apache

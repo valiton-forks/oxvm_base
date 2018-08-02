@@ -1,0 +1,31 @@
+---
+- name: Fail with error message when apache version is not 2.4 because we only constructed the template for that version.
+  become: yes
+  shell: (>&2 echo "unsupported apache version. only apache 2.4 is supported" && exit 1)
+  when: apache_version.stdout.find('Apache/2.4.') == -1
+
+- name: vhosts counter
+  set_fact:
+    vhosts_counter: 0
+
+- name: main servername array
+  set_fact:
+    main_servername_array: [ '{{ vagrant_local.vm.hostname }}' ]
+
+- name: main docroot array
+  set_fact:
+    main_docroot_array: [ '{{ apache.docroot }}' ]
+
+- name: Prepend hostname entry string to vagrant_local.vm.aliases and store into a new list
+  set_fact:
+    all_vhosts_servernames: "{{ main_servername_array |union(vagrant_local.vm.aliases) }}"
+
+- name: Prepend docroot entry string to apache_bds.additionalvhosts_docroots and store into a new list
+  set_fact:
+    all_vhosts_docroots: "{{ main_docroot_array |union(apache_bds.additionalvhosts_docroots) }}"
+
+- name: create vhosts
+  include_tasks: create_vhost_by_template.yml
+  # debug:
+  #  msg: "{{ item.0 }} - {{ item.1 }}"
+  loop: "{{ all_vhosts_servernames |zip(all_vhosts_docroots) |list }}"

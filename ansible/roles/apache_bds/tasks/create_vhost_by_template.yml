@@ -1,0 +1,54 @@
+---
+  # - name: Check if docroot dir exists
+  #   become: yes
+  #   stat:
+  #     path: "{{ item.1 }}"
+  #   register: file_stat_values
+
+  # - name: Create docroot dir when not mounted yet to prevent error
+  #   become: yes
+  #   file:
+  #     path: "{{ item.1 }}"
+  #     state: directory
+  #     recurse: yes
+  #   when: file_stat_values.stat.exists == false
+
+  # - name: set servername variable for use in template
+  # set_fact:
+  #     template_servername: "{{ item.0 }}"
+
+  # - name: set docroot variable for use in template
+  #   set_fact:
+  #     template_docroot: "{{ item.1 }}"
+
+- name: increment vhosts counter
+  set_fact: vhosts_counter={{ vhosts_counter | int + 1 }}
+
+- name: conf basename
+  set_fact:
+    conf_basename: "{{ '%03d' |format(vhosts_counter|int) }}-{{ item.0 }}"
+
+- name: conf_basename is
+  debug:
+    msg: "conf_basename is {{ conf_basename }}"
+
+- name: Create main vhost in apache2.4
+  become: yes
+  template: src=vhost24.conf.tpl dest=/etc/apache2/sites-available/{{ conf_basename }}.conf
+  notify: restart apache
+  # when: apache_version.stdout.find('Apache/2.4.') != -1
+  vars:
+    template_servername: "{{ item.0 }}"
+    template_docroot: "{{ item.1 }}"
+
+  # - name: Create main vhost in apache2.2
+  #   become: yes
+  #   shell: (>&2 echo "apache2.2 is not supported" && exit 1)
+  #   when: apache_version.stdout.find('Apache/2.2.') != -1
+
+- name: a2ensite counter-servername.conf while counter starts at one
+  become: yes
+  command: a2ensite {{ conf_basename }}.conf
+  args:
+    creates: /etc/apache2/sites-enabled/{{ conf_basename }}.conf
+  notify: restart apache

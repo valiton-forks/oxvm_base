@@ -5,8 +5,9 @@
     - apache
     - apache_bds
 
-- include: additionalvhost_tasks.yml
-  when: apache.install and apache_bds.install and apache_bds.additionalvhost_docroot and apache_bds.additionalvhost_servername
+- name: Include create vhosts tasks
+  import_tasks: create_vhosts_tasks.yml
+  when: apache.install and apache_bds.install and vagrant_local.vm.aliases|length == apache_bds.additionalvhosts_docroots|length
   tags:
     - apache
     - apache_bds

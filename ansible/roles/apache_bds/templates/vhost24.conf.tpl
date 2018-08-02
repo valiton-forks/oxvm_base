@@ -1,12 +1,12 @@
 <VirtualHost *:80>
-    ServerName {{ apache.servername }}
+    ServerName {{ template_servername }}
     # ServerAlias
     ServerAdmin am.sz@burda.com
 
-    DocumentRoot {{ apache.docroot }}
+    DocumentRoot {{ template_docroot }}
 
 
-    SetEnvIf baseurl ^(.*)$ baseurl=https://{{ apache.servername }}
+    SetEnvIf baseurl ^(.*)$ baseurl=https://{{ template_servername }}
 
 
     <IfModule mod_rewrite.c>
@@ -28,7 +28,7 @@
     </IfModule>
 
 
-    <Directory {{ apache.docroot }}>
+    <Directory {{ template_docroot }}>
         # This relaxes Apache security settings.
         AllowOverride all
         # MultiViews must be turned off, and no indexing
@@ -52,8 +52,8 @@
     </IfModule>
 
 
-    ErrorLog ${APACHE_LOG_DIR}/{{ apache.servername }}.error.log
-    CustomLog ${APACHE_LOG_DIR}/{{ apache.servername }}.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/{{ template_servername }}.error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ template_servername }}.access.log combined
 
 
     {% if mailhog.install %}
@@ -91,17 +91,17 @@
 
 <VirtualHost *:443>
 
-    ServerName {{ apache.servername }}
+    ServerName {{ template_servername }}
     # ServerAlias
     ServerAdmin am.sz@burda.com
 
-    DocumentRoot {{ apache.docroot }}
+    DocumentRoot {{ template_docroot }}
 
 
-    SetEnvIf baseurl ^(.*)$ baseurl=https://{{ apache.servername }}
+    SetEnvIf baseurl ^(.*)$ baseurl=https://{{ template_servername }}
 
 
-    <Directory {{ apache.docroot }}>
+    <Directory {{ template_docroot }}>
         # This relaxes Apache security settings.
         AllowOverride all
         # MultiViews must be turned off, and no indexing
@@ -125,8 +125,8 @@
     </IfModule>
 
 
-    ErrorLog ${APACHE_LOG_DIR}/{{ apache.servername }}.error.log
-    CustomLog ${APACHE_LOG_DIR}/{{ apache.servername }}.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/{{ template_servername }}.error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ template_servername }}.access.log combined
 
 
     SSLEngine on
