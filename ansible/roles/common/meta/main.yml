@@ -3,10 +3,11 @@ dependencies:
   - server
   - landing
   - apache
-  - apache_bds  ## need to be after apache
+  - apache_bds  ## needs to be after apache
   - mysql
+  - mysql_bds  ## needs to be after mysql
   - php
-  - php_bds  ## need to be after php
+  - php_bds  ## needs to be after php
   - mailhog
   - adminer
   - adminer_editor

@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: mysql.install and mysql_bds.install
+  tags:
+    - mysql
+    - mysql_bds

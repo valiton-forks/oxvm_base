@@ -1,0 +1,80 @@
+---
+- name: Ensure MySQL service running
+  become: yes
+  service: name=mysql state=started enabled=yes
+
+- name: Backup mysql.cnf before changing it
+  become: yes
+  copy:
+    src: /etc/mysql/conf.d/mysql.cnf
+    dest: /etc/mysql/conf.d/mysql.cnf.ori.bak
+    owner: root
+    group: root
+    mode: 0644
+    force: no
+
+- name: Backup mysqld.cnf before changing it
+  become: yes
+  copy:
+    src: /etc/mysql/mysql.conf.d/mysqld.cnf
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf.ori.bak
+    owner: root
+    group: root
+    mode: 0644
+    force: no
+
+- name: Add or set client default-character-set
+  become: yes
+  ini_file:
+    path: /etc/mysql/conf.d/mysql.cnf
+    section: client
+    option: default-character-set
+    value: utf8
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    create: no
+  notify: restart mysql
+
+- name: Add or set mysql default-character-set
+  become: yes
+  ini_file:
+    path: /etc/mysql/conf.d/mysql.cnf
+    section: mysql
+    option: default-character-set
+    value: utf8
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    create: no
+  notify: restart mysql
+
+- name: Add or set mysqld character-set-server
+  become: yes
+  ini_file:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: character-set-server
+    value: utf8
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    create: no
+  notify: restart mysql
+
+- name: Add or set mysqld collation-server
+  become: yes
+  ini_file:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: collation-server
+    value: utf8_general_ci
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    create: no
+  notify: restart mysql
