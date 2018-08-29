@@ -78,3 +78,17 @@
     no_extra_spaces: yes
     create: no
   notify: restart mysql
+
+- name: Add or set sql-mode
+  become: yes
+  ini_file:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: sql-mode
+    value: "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    create: no
+  notify: restart mysql
